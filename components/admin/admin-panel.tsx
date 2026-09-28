@@ -38,6 +38,7 @@ const TEXT_FIELDS: { key: string; label: string; area?: boolean; ltr?: boolean; 
   { key: 'contact_phone', label: 'ژمارەی مۆبایل', ltr: true, hint: 'بە بەتاڵی بهێڵەوە ئەگەر ناتەوێت دەربکەوێت' },
   { key: 'contact_location', label: 'ناونیشان / شوێن' },
   { key: 'footer_note', label: 'دەقی پێداوی سەرەوە (فووتەر)' },
+  { key: 'footer_qr_hint', label: 'دەقی ژێر کۆدی QR لە فووتەردا' },
   { key: 'footer_rights', label: 'دەقی مافەکان لە فووتەردا', hint: 'دەقەکەی پاش © ساڵ و ناو' },
   { key: 'footer_credit', label: 'دەقی کرێدیت (فووتەر)', ltr: true, hint: 'ئەم دەقە ٥ جار کلیکی بکە دەرگای بەڕێوەبەر دەکاتەوە' },
 ];

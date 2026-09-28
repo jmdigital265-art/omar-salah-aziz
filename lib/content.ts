@@ -26,6 +26,7 @@ export const DEFAULT_CONTENT: ContentMap = {
   contact_phone: '',
   contact_location: 'هەولێر، کوردستان',
   footer_note: 'سوپاس بۆ سەردانکردنی ماڵپەرەکەم 🤍',
+  footer_qr_hint: 'مۆبایلەکەت سکان بکە بۆکردنەوەی ماڵپەر',
   footer_rights: 'هەموو مافەکان پارێزراون',
   footer_credit: 'Developed by J&M Digital',
 };

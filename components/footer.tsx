@@ -33,7 +33,7 @@ export default function Footer({ onSecretUnlock }: { onSecretUnlock: () => void 
     <footer className="relative mt-10 border-t border-[hsl(var(--border))]">
       <div className="bg-brand-gradient pointer-events-none absolute inset-x-0 top-0 h-px opacity-70" aria-hidden />
 
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 px-4 py-12 text-center">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-7 px-4 py-12 text-center">
         <motion.p
           className="font-naskh max-w-md text-[14px] text-muted-foreground"
           initial={{ opacity: 0, y: 20 }}
@@ -43,6 +43,29 @@ export default function Footer({ onSecretUnlock }: { onSecretUnlock: () => void 
         >
           {t('footer_note')}
         </motion.p>
+
+        {/* QR code — scan to open the site on a phone */}
+        <motion.div
+          className="perspective-800 flex flex-col items-center gap-3"
+          initial={{ opacity: 0, rotateX: -35, y: 30 }}
+          whileInView={{ opacity: 1, rotateX: 0, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="glass preserve-3d group rounded-2xl p-2.5 transition-all duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_16px_38px_-14px_rgba(139,92,246,0.55)]">
+            <div className="rounded-xl bg-white p-2 shadow-inner" style={{ transform: 'translateZ(24px)' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/qr-code.svg"
+                alt={t('footer_qr_hint')}
+                className="h-24 w-24 sm:h-28 sm:w-28"
+                draggable={false}
+                loading="lazy"
+              />
+            </div>
+          </div>
+          <p className="text-[12px] font-bold text-muted-foreground">{t('footer_qr_hint')}</p>
+        </motion.div>
 
         <div className="h-px w-40 bg-gradient-to-r from-transparent via-[hsl(var(--border))] to-transparent" aria-hidden />
 
