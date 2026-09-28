@@ -1,0 +1,53 @@
+// Omar Salah Aziz — personal website (Kurdish Sorani, RTL)
+// Prisma schema (PostgreSQL: Neon / Supabase). Tables are prefixed `omar_`
+// so this app can safely share a database with other sites.
+
+generator client {
+  provider = "prisma-client-js"
+  // native = local dev on Windows; rhel-openssl-3.0.x = Netlify's Linux functions
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Key-value store for every editable piece of text/image on the site
+model SiteContent {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
+
+  @@map("omar_content")
+}
+
+// Social media links shown on the public site (admin-managed)
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  url       String
+  label     String   @default("")
+  order     Int      @default(0)
+  visible   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("omar_social")
+}
+
+// Server-side admin sessions — only the HMAC-SHA256 hash of each token is
+// stored, so a database leak can never be replayed as a valid session.
+model AdminSession {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  ip        String   @default("")
+  userAgent String   @default("")
+  createdAt DateTime @default(now())
+  lastSeen  DateTime @default(now())
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+
+  @@map("omar_sessions")
+}

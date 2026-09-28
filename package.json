@@ -1,0 +1,37 @@
+{
+  "name": "omar-salah-aziz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ماڵپەری کەسی عومەر ساڵح عەزیز — Personal website (Kurdish Sorani, RTL) with secure admin panel",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "prisma generate && next build",
+    "start": "next start -p 3100",
+    "typecheck": "tsc --noEmit",
+    "db:push": "prisma db push",
+    "db:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.19.1",
+    "framer-motion": "^11.11.9",
+    "lucide-react": "^0.441.0",
+    "next": "14.2.13",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.16.5",
+    "@types/react": "^18.3.8",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "prisma": "^5.19.1",
+    "tailwindcss": "^3.4.12",
+    "typescript": "^5.6.2"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
