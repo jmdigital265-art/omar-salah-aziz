@@ -21,10 +21,13 @@ export const DEFAULT_CONTENT: ContentMap = {
     'بۆ ئەوەی زیاتر لە من بزانیت یان پەیوەندیم پێوە بکەیت، لە ڕێگەکانی سەرەوە و لینکەکانی سۆشیال میدیا هەموو کاتێک لە خزمەتدام.',
   ].join('\n\n'),
   photo_url: '',
+  logo_url: '',
   contact_email: '',
   contact_phone: '',
   contact_location: 'هەولێر، کوردستان',
   footer_note: 'سوپاس بۆ سەردانکردنی ماڵپەرەکەم 🤍',
+  footer_rights: 'هەموو مافەکان پارێزراون',
+  footer_credit: 'Developed by J&M Digital',
 };
 
 /** Keys an admin may write (never includes `admin_password_hash`). */

@@ -20,7 +20,7 @@ type TabId = 'texts' | 'photo' | 'socials' | 'settings';
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'texts', label: 'دەقەکان', icon: <FileText className="h-4 w-4" aria-hidden /> },
-  { id: 'photo', label: 'وێنە', icon: <ImagePlus className="h-4 w-4" aria-hidden /> },
+  { id: 'photo', label: 'وێنەکان', icon: <ImagePlus className="h-4 w-4" aria-hidden /> },
   { id: 'socials', label: 'سۆشیال', icon: <Share2 className="h-4 w-4" aria-hidden /> },
   { id: 'settings', label: 'ڕێکخستن', icon: <Settings2 className="h-4 w-4" aria-hidden /> },
 ];
@@ -37,7 +37,9 @@ const TEXT_FIELDS: { key: string; label: string; area?: boolean; ltr?: boolean; 
   { key: 'contact_email', label: 'ئیمەیڵ', ltr: true, hint: 'بە بەتاڵی بهێڵەوە ئەگەر ناتەوێت دەربکەوێت' },
   { key: 'contact_phone', label: 'ژمارەی مۆبایل', ltr: true, hint: 'بە بەتاڵی بهێڵەوە ئەگەر ناتەوێت دەربکەوێت' },
   { key: 'contact_location', label: 'ناونیشان / شوێن' },
-  { key: 'footer_note', label: 'دەقی پێداوی سەرەوە' },
+  { key: 'footer_note', label: 'دەقی پێداوی سەرەوە (فووتەر)' },
+  { key: 'footer_rights', label: 'دەقی مافەکان لە فووتەردا', hint: 'دەقەکەی پاش © ساڵ و ناو' },
+  { key: 'footer_credit', label: 'دەقی کرێدیت (فووتەر)', ltr: true, hint: 'ئەم دەقە ٥ جار کلیکی بکە دەرگای بەڕێوەبەر دەکاتەوە' },
 ];
 
 export default function AdminPanel({ onClose }: { onClose: () => void }) {
@@ -178,16 +180,29 @@ function TextsTab() {
   );
 }
 
-/* ─────────────────── photo tab ─────────────────── */
+/* ─────────────────── images tab (profile photo + logo) ─────────────────── */
 
-function PhotoTab() {
-  const { content, savePhoto } = useSite();
+function ImageCard({
+  title,
+  hint,
+  currentUrl,
+  fallbackSrc,
+  round,
+  onPick,
+}: {
+  title: string;
+  hint: string;
+  currentUrl: string;
+  fallbackSrc: string;
+  round?: boolean;
+  onPick: (dataUrl: string) => Promise<{ ok: boolean; error?: string }>;
+}) {
   const [preview, setPreview] = useState<string | null>(null);
   const [info, setInfo] = useState('');
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<{ msg: string; ok: boolean } | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const current = preview ?? content.photo_url ?? '';
+  const current = preview ?? currentUrl ?? '';
 
   const pick = async (file?: File | null) => {
     if (!file) return;
@@ -207,54 +222,75 @@ function PhotoTab() {
   const save = async () => {
     if (!preview) return;
     setBusy(true);
-    const res = await savePhoto(preview);
+    const res = await onPick(preview);
     setBusy(false);
-    setStatus(res.ok ? { msg: 'وێنە پاشەکەوت کرا', ok: true } : { msg: res.error ?? 'هەڵە', ok: false });
+    setStatus(res.ok ? { msg: 'پاشەکەوت کرا', ok: true } : { msg: res.error ?? 'هەڵە', ok: false });
     if (res.ok) setPreview(null);
     setTimeout(() => setStatus(null), 3500);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="glass-strong flex flex-col items-center gap-5 rounded-3xl p-8">
-        <div className="portrait-ring relative aspect-square w-56 rounded-[1.8rem] sm:w-64">
-          <div className="glass-strong h-full w-full overflow-hidden rounded-[1.8rem] p-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={current || '/avatar.svg'}
-              alt="پێشبینینی وێنە"
-              className="h-full w-full rounded-[1.45rem] object-cover"
-            />
-          </div>
-        </div>
-        {info && <p className="text-[12px] text-muted-foreground">{info}</p>}
-
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => pick(e.target.files?.[0])}
-          />
-          <button onClick={() => fileRef.current?.click()} disabled={busy} className="btn-ghost text-[14px]">
-            {busy ? <Loader2 className="h-4.5 w-4.5 animate-spin" aria-hidden /> : <ImagePlus className="h-4.5 w-4.5" aria-hidden />}
-            هەڵبژاردنی وێنە
-          </button>
-          {preview && (
-            <button onClick={save} disabled={busy} className="btn-primary text-[14px]">
-              <Save className="h-4.5 w-4.5" aria-hidden />
-              پاشەکەوتکردنی وێنە
-            </button>
-          )}
-        </div>
-        {status && <Status msg={status.msg} ok={status.ok} />}
+    <div className="glass-strong flex flex-col items-center gap-5 rounded-3xl p-6">
+      <div className="text-center">
+        <h3 className="text-[15px] font-extrabold">{title}</h3>
+        <p className="mt-1 text-[12px] text-muted-foreground">{hint}</p>
       </div>
 
-      <p className="text-center text-[12.5px] leading-6 text-muted-foreground">
-        هەر وێنەیەک هەڵبژێریت، خۆکارانە کۆمپرێس دەکرێت بۆ قەبارەیەکی گونجاو.
-        ئەگەر دەتەوێت وێنەکە لاببرێت، لە تابی «دەقەکان» بەشی وێنە بەتاڵ بکە.
-      </p>
+      <div className={`relative aspect-square w-40 ${round ? '' : 'portrait-ring rounded-[1.6rem]'}`}>
+        <div className={`glass-strong h-full w-full overflow-hidden p-1.5 ${round ? 'rounded-full' : 'rounded-[1.6rem]'}`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={current || fallbackSrc}
+            alt={title}
+            className={`h-full w-full object-cover ${round ? 'rounded-full' : 'rounded-[1.3rem]'}`}
+          />
+        </div>
+      </div>
+      {info && <p className="text-[12px] text-muted-foreground">{info}</p>}
+
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => pick(e.target.files?.[0])}
+        />
+        <button onClick={() => fileRef.current?.click()} disabled={busy} className="btn-ghost text-[13.5px]">
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <ImagePlus className="h-4 w-4" aria-hidden />}
+          هەڵبژاردن
+        </button>
+        {preview && (
+          <button onClick={save} disabled={busy} className="btn-primary text-[13.5px]">
+            <Save className="h-4 w-4" aria-hidden />
+            پاشەکەوتکردن
+          </button>
+        )}
+      </div>
+      {status && <Status msg={status.msg} ok={status.ok} />}
+    </div>
+  );
+}
+
+function PhotoTab() {
+  const { content, savePhoto, saveLogo } = useSite();
+  return (
+    <div className="space-y-6">
+      <ImageCard
+        title="وێنەی کەسی (پرۆفایل)"
+        hint="وێنەی سەرەکی لە پەڕەی سەرەتادا — خۆکارانە کۆمپرێس دەکرێت"
+        currentUrl={content.photo_url}
+        fallbackSrc="/avatar.svg"
+        onPick={savePhoto}
+      />
+      <ImageCard
+        title="لۆگۆی ماڵپەر"
+        hint="لە ناڤبار و شاشەی بارکردندا دەردەکەوێت — بەتاڵ بەیت حرفی «ع» دەردەکەوێت"
+        currentUrl={content.logo_url}
+        fallbackSrc="/avatar.svg"
+        round
+        onPick={saveLogo}
+      />
     </div>
   );
 }

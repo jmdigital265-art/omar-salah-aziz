@@ -20,6 +20,7 @@ export async function GET() {
 
 const LIMITS: Record<string, number> = {
   photo_url: 1_050_001,
+  logo_url: 1_050_001,
   about_text: 6000,
 };
 
@@ -46,7 +47,7 @@ export async function PUT(req: Request) {
       if (value.length > (LIMITS[key] ?? 600)) {
         return NextResponse.json({ ok: false, error: `ناوەڕۆکی ${key} زۆر درێژە` }, { status: 400 });
       }
-      if (key === 'photo_url' && value && !isSafeImageValue(value)) {
+      if ((key === 'photo_url' || key === 'logo_url') && value && !isSafeImageValue(value)) {
         return NextResponse.json(
           { ok: false, error: 'وێنە نایاساییە — تکایە وێنەیەکی بچووکتر هەڵبژێرە' },
           { status: 400 },

@@ -66,10 +66,10 @@ const themeBootstrap = `
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ku" dir="rtl" suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
-      </head>
       <body className={`${kufi.variable} ${naskh.variable} min-h-screen font-kufi`}>
+        {/* before-first-paint theme bootstrap — must be a direct body child:
+            inside <head>, React SSR serializes dangerouslySetInnerHTML as text */}
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         {children}
       </body>
     </html>

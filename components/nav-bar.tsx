@@ -58,9 +58,19 @@ export default function NavBar() {
             className="flex items-center gap-2.5"
             aria-label={t('brand_name')}
           >
-            <span className="bg-brand-gradient flex h-9 w-9 items-center justify-center rounded-xl text-base font-extrabold text-white shadow-md shadow-indigo-500/40">
-              ع
-            </span>
+            {t('logo_url') ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={t('logo_url')}
+                alt={t('brand_name')}
+                className="h-9 w-9 rounded-xl object-cover shadow-md shadow-indigo-500/40"
+                draggable={false}
+              />
+            ) : (
+              <span className="bg-brand-gradient flex h-9 w-9 items-center justify-center rounded-xl text-base font-extrabold text-white shadow-md shadow-indigo-500/40">
+                ع
+              </span>
+            )}
             <span className="hidden text-[15px] font-bold sm:block">{t('brand_name')}</span>
           </button>
 

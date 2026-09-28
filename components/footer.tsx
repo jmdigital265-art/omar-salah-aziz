@@ -49,22 +49,20 @@ export default function Footer({ onSecretUnlock }: { onSecretUnlock: () => void 
         <div className="flex flex-col items-center gap-2">
           <p className="text-[12.5px] text-muted-foreground">
             © {new Date().getFullYear()}{' '}
-            <span className="font-bold text-foreground">{t('brand_name')}</span> — هەموو مافەکان پارێزراون
+            <span className="font-bold text-foreground">{t('brand_name')}</span>
+            {' — '}{t('footer_rights')}
           </p>
 
           {/* developer credit — the secret admin door */}
           <button
             onClick={handleDevClick}
             className="group relative flex select-none items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold text-muted-foreground transition-colors duration-300 hover:text-foreground"
-            title="Developed by J&M Digital"
-            aria-label="Developed by J&M Digital"
+            title={t('footer_credit', 'Developed by J&M Digital')}
+            aria-label={t('footer_credit', 'Developed by J&M Digital')}
           >
             <Code2 className="h-3.5 w-3.5 opacity-70 transition-transform duration-300 group-hover:rotate-12" aria-hidden />
             <span dir="ltr" style={{ fontFamily: 'Tahoma, sans-serif' }}>
-              Developed by
-            </span>
-            <span className="text-brand-gradient font-extrabold" dir="ltr" style={{ fontFamily: 'Tahoma, sans-serif' }}>
-              J&amp;M Digital
+              {t('footer_credit', 'Developed by J&M Digital')}
             </span>
 
             {/* charge indicator (appears from the 3rd click) */}

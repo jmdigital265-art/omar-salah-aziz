@@ -29,7 +29,7 @@ function Inner() {
 
   return (
     <>
-      <LoadingScreen name={t('brand_name')} />
+      <LoadingScreen name={t('brand_name')} logo={t('logo_url') || undefined} />
       <Backdrop />
       <NavBar />
 

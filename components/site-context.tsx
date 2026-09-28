@@ -24,6 +24,7 @@ type SiteContextValue = {
   logoutAdmin: () => Promise<void>;
   saveContent: (updates: ContentMap) => Promise<ActionResult>;
   savePhoto: (dataUrl: string) => Promise<ActionResult>;
+  saveLogo: (dataUrl: string) => Promise<ActionResult>;
   addSocial: (s: { platform: string; url: string; label: string; order: number; visible: boolean }) => Promise<ActionResult>;
   updateSocial: (id: string, s: { platform: string; url: string; label: string; order: number; visible: boolean }) => Promise<ActionResult>;
   deleteSocial: (id: string) => Promise<ActionResult>;
@@ -159,6 +160,10 @@ export function SiteProvider({
     return saveContent({ photo_url: dataUrl });
   }, [saveContent]);
 
+  const saveLogo = useCallback(async (dataUrl: string): Promise<ActionResult> => {
+    return saveContent({ logo_url: dataUrl });
+  }, [saveContent]);
+
   const socialAction = useCallback(async (
     url: string,
     method: 'POST' | 'PUT' | 'DELETE',
@@ -194,10 +199,10 @@ export function SiteProvider({
   const value = useMemo<SiteContextValue>(() => ({
     content, socials, t, theme, toggleTheme,
     isAdmin, adminReady, loginAdmin, logoutAdmin,
-    saveContent, savePhoto, addSocial, updateSocial, deleteSocial, refresh,
+    saveContent, savePhoto, saveLogo, addSocial, updateSocial, deleteSocial, refresh,
   }), [
     content, socials, t, theme, toggleTheme, isAdmin, adminReady,
-    loginAdmin, logoutAdmin, saveContent, savePhoto, addSocial, updateSocial, deleteSocial, refresh,
+    loginAdmin, logoutAdmin, saveContent, savePhoto, saveLogo, addSocial, updateSocial, deleteSocial, refresh,
   ]);
 
   return <SiteContext.Provider value={value}>{children}</SiteContext.Provider>;

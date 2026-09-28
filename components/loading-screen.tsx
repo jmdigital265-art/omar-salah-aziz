@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 /* Splash preloader: a 3D cube folding around the initial + name reveal.
    Shown on first paint for ~1.9s, then scales away. */
 
-function Cube() {
+function Cube({ logo }: { logo?: string }) {
   const face =
     'absolute inset-0 flex items-center justify-center rounded-xl border border-white/25 bg-gradient-to-br from-indigo-500/25 via-violet-500/20 to-fuchsia-500/25 backdrop-blur-sm';
   const half = 46; // half of the 92px cube
@@ -27,7 +27,12 @@ function Cube() {
       >
         {faces.map((f, i) => (
           <div key={i} className={face} style={f}>
-            <span className="font-kufi text-3xl font-extrabold text-white/85">ع</span>
+            {logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={logo} alt="" className="h-[72%] w-[72%] rounded-lg object-contain" draggable={false} />
+            ) : (
+              <span className="font-kufi text-3xl font-extrabold text-white/85">ع</span>
+            )}
           </div>
         ))}
       </motion.div>
@@ -35,7 +40,7 @@ function Cube() {
   );
 }
 
-export default function LoadingScreen({ name }: { name: string }) {
+export default function LoadingScreen({ name, logo }: { name: string; logo?: string }) {
   const [show, setShow] = useState(true);
 
   useEffect(() => {
@@ -58,7 +63,7 @@ export default function LoadingScreen({ name }: { name: string }) {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
           >
-            <Cube />
+            <Cube logo={logo} />
           </motion.div>
 
           <motion.h1
